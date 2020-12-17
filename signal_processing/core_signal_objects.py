@@ -41,21 +41,6 @@ class AudioSignal(object):
 			int(self.sampling_rate * self.st_window_stp)
 			)
 
-	def _calculate_spectogram(self):
-		"""
-		Method that calculates a spectogram from the amplitude timeseries of 
-		the audio signal based on the pyAudioAnalysis ShortTermFeatures methods. 
-		"""
-		# Calling pyAudioAnalysis to compute spectogram data matrix:
-		self.specgram, self.time_axis, self.freq_axis = aF.spectrogram(
-			self.cleaned_amplitude, 
-			self.sampling_rate,
-			int(self.sampling_rate * self.st_window_size),
-			int(self.sampling_rate * self.st_window_stp),
-			plot=True,
-			show_progress=True
-			)
-
 	def _calculate_short_term_fourier_transform(self, n_fft, hop_length=512):
 		"""
 		Method uses the librosa library to calculate tge Short Term Fourier Transform. All of
@@ -73,10 +58,42 @@ class AudioSignal(object):
 		self.stft_frequency = np.linspace(0, self.sampling_rate, 
 			len(self.stft_magnitude))
 
+	def _calculate_spectogram(self):
+		"""
+		The method that performs data transformations of STFT data generated from the
+		self._calculate_short_term_fourier_transform() methods. The data transformations
+		applied on spectogram data are:
 
+		* STFT amplitude spectogram --> Decible Scaled Spectogram
+		* A Mel Spectogram 
+		* A Mel Spectogram --> Mel Decible Scaled Spectogram
+		
+		"""
+		# Converting the STFT magnitude (amplitude spectogram) to Decibel scale:
+		self.stft_Db_specdata = librosa.amplitude_to_db(
+			self.stft_magnitude, ref=np.max)
 
+		# Calculating the Mel Spectograms:
+		self.mel_specdata = librosa.feature.melspectrogram(
+			self.cleaned_amplitude, sr=self.sampling_rate)
 
+		# Converting the Mel Spectogram dat to a decible scale: 
+		self.mel_Db_specdata = librosa.amplitude_to_db(
+			self.mel_specdata, ref=self.sampling_rate)
 
+	def calculate_mel_frequency_cepstral_coeffs(self, num_mfcc=13):
+		"""
+		The method makes use of the librosa library to compute the Mel Frequency
+		Cepstral Coefficients (MFCCs). 
+		"""
+		# Creating instance parameters:
+		self.num_mfcc = num_mfcc
 
+		# Calculating the MFCC from the cleaned amplitude timeseries:
+		self.mfccs = librosa.feature.mfcc(
+			self.cleaned_amplitude, 
+			n_fft= self.n_fft,
+			hop_length= self.hop_length,
+			n_mfcc=num_mfcc)
 
 
