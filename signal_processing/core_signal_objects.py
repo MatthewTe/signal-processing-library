@@ -18,7 +18,7 @@ class AudioSignal(object):
 	"""
 	def __init__(self, audio_path, st_window_size=0.050, st_window_stp=0.050):
 		# Declaring Instance parameters:
-		self.sampling_rate, self.amplitude_timeseries = aIO.read_audio_file(audio_path)
+		self.amplitude_timeseries, self.sampling_rate = librosa.load(audio_path)
 		self.signal_duration = len(self.amplitude_timeseries / float(self.sampling_rate))
 		
 		self.st_window_size = st_window_size # Defaults are 50 m/s.
