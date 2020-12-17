@@ -43,11 +43,12 @@ class AudioSignal(object):
 		the audio signal based on the pyAudioAnalysis ShortTermFeatures methods. 
 		"""
 		# Calling pyAudioAnalysis to compute spectogram data matrix:
-		self.specgram, self.time_axis, self.freq_axis = aF.spectogram(
+		self.specgram, self.time_axis, self.freq_axis = aF.spectrogram(
 			self.amplitude_timeseries, 
 			self.sampling_rate,
-			self.st_window_size, 
-			self.st_window_stp)
+			int(self.sampling_rate * self.st_window_size),
+			int(self.sampling_rate * self.st_window_stp)
+			)
 
 	def _calculate_fast_fourier_transform(self):
 		"""
