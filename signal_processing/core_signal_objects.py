@@ -52,13 +52,22 @@ class AudioSignal(object):
 			show_progress=True
 			)
 
-	def _calculate_fast_fourier_transform(self):
+	def _calculate_short_term_fourier_transform(self, n_fft, hop_length=512):
 		"""
-		Method that uses the scipy.fft methods to compute the Fast Fourier
-		Transformation on the amplitude timeseries to convert the data from
-		the time domain to the frequency domain. 
+		Method uses the librosa library to calculate tge Short Term Fourier Transform. All of
+		the STFT data is calculated via the librosa.stft() method. 
 		"""
-		self.fft_data = fft(self.amplitude_timeseries)
+		# Declaring the FFT window size and STFT audio frame length as instance params:
+		self.n_fft, self.hop_length = n_fft, hop_length
+
+		# Performing the librosa Short Term Fourier Transform calculations:
+		self.stft_magnitude = np.abs(librosa.stft(
+			self.amplitude_timeseries,
+			n_fft=self.n_fft,
+			hop_length=self.hop_length))
+
+		self.stft_frequency = np.linespace(0, self.sampling_rate, 
+			len(self.stft_magnitude))
 
 
 
