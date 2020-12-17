@@ -6,5 +6,5 @@ setup(
     author = "Matthew Teelucksingh",
     packages = ["signal_processing"],
     license = 'MIT',
-    long_description=open('README.txt').read()   
+    long_description=open('README.md').read()   
     )
