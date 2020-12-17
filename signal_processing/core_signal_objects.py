@@ -33,8 +33,8 @@ class AudioSignal(object):
 		self.short_term_feature_matrix, self.short_term_feature_names = aF.feature_extraction(
 			self.amplitude_timeseries, 
 			self.sampling_rate,
-			st_window_size,
-			st_window_stp)
+			self.st_window_size,
+			self.st_window_stp)
 
 	def _calculate_spectogram(self):
 		"""
