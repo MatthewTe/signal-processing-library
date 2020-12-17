@@ -47,7 +47,9 @@ class AudioSignal(object):
 			self.amplitude_timeseries, 
 			self.sampling_rate,
 			int(self.sampling_rate * self.st_window_size),
-			int(self.sampling_rate * self.st_window_stp)
+			int(self.sampling_rate * self.st_window_stp),
+			plot=True,
+			show_progress=True
 			)
 
 	def _calculate_fast_fourier_transform(self):
