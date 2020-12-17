@@ -20,6 +20,10 @@ class AudioSignal(object):
 		# Declaring Instance parameters:
 		self.amplitude_timeseries, self.sampling_rate = librosa.load(audio_path)
 		self.signal_duration = len(self.amplitude_timeseries / float(self.sampling_rate))
+
+		# Cleaing the audio signal of leading and trailing scilence:
+		self.cleaned_amplitude, _ = librosa.effects.trim(self.amplitude_timeseries)
+		self.cleaned_signal_duration = len(self.cleaned_amplitude) / float(self.sampling_rate)
 		
 		self.st_window_size = st_window_size # Defaults are 50 m/s.
 		self.st_window_stp = st_window_stp
@@ -31,7 +35,7 @@ class AudioSignal(object):
 		"""
 		# Calling pyAudioAnalysis to compute short term features:
 		self.short_term_feature_matrix, self.short_term_feature_names = aF.feature_extraction(
-			self.amplitude_timeseries, 
+			self.cleaned_amplitude, 
 			self.sampling_rate,
 			int(self.sampling_rate * self.st_window_size),
 			int(self.sampling_rate * self.st_window_stp)
@@ -44,7 +48,7 @@ class AudioSignal(object):
 		"""
 		# Calling pyAudioAnalysis to compute spectogram data matrix:
 		self.specgram, self.time_axis, self.freq_axis = aF.spectrogram(
-			self.amplitude_timeseries, 
+			self.cleaned_amplitude, 
 			self.sampling_rate,
 			int(self.sampling_rate * self.st_window_size),
 			int(self.sampling_rate * self.st_window_stp),
@@ -62,7 +66,7 @@ class AudioSignal(object):
 
 		# Performing the librosa Short Term Fourier Transform calculations:
 		self.stft_magnitude = np.abs(librosa.stft(
-			self.amplitude_timeseries,
+			self.cleaned_amplitude,
 			n_fft=self.n_fft,
 			hop_length=self.hop_length))
 
