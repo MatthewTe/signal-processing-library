@@ -66,7 +66,7 @@ class AudioSignal(object):
 			n_fft=self.n_fft,
 			hop_length=self.hop_length))
 
-		self.stft_frequency = np.linespace(0, self.sampling_rate, 
+		self.stft_frequency = np.linspace(0, self.sampling_rate, 
 			len(self.stft_magnitude))
 
 
